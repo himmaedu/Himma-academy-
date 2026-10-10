@@ -47,8 +47,8 @@ h1 span{color:var(--blue)}
 .dots{display:flex;align-items:center;gap:12px}
 .dot{position:relative;width:10px;height:10px;padding:0;border:0;border-radius:50%;background:rgba(15,155,189,.42);cursor:pointer;transition:transform .35s,background .35s}
 .dot::after{content:"";position:absolute;inset:-9px}
-.dot.on{background:var(--gold1);transform:scale(1.55);animation:dglow 1.6s ease-in-out infinite}
-@keyframes dglow{0%,100%{box-shadow:0 0 6px 1px rgba(255,194,51,.55)}50%{box-shadow:0 0 14px 4px rgba(255,194,51,.95)}}
+.dot.on{background:#1bb0d0;transform:scale(1.55);animation:dglow 1.6s ease-in-out infinite}
+@keyframes dglow{0%,100%{box-shadow:0 0 6px 1px rgba(27,176,208,.6)}50%{box-shadow:0 0 14px 4px rgba(27,176,208,1)}}
 
 section.f{background:var(--soft);padding:70px 0;text-align:center}
 section.f h2{font-size:30px;padding:0 5%}
@@ -137,7 +137,7 @@ section.f>p{color:var(--muted);margin-bottom:30px;padding:0 5%}
 .cta{margin-top:22px;text-align:center}
 
 @media (max-width:800px){.hero{grid-template-columns:1fr;padding:40px 5%}nav a.h{display:none}.ft-in{grid-template-columns:1fr;gap:24px}}
-@media (prefers-reduced-motion:reduce){.track{animation:none}.marquee{overflow-x:auto}.mc,.mc::before,.mc::after,.shine{animation:none}.sec{opacity:1;transform:none;transition:none}.ov,.mc{transition:none}.soc .sw{transition:none}.dot{transition:none}.dot.on{animation:none;box-shadow:0 0 10px 3px rgba(255,194,51,.8)}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}.marquee{overflow-x:auto}.mc,.mc::before,.mc::after,.shine{animation:none}.sec{opacity:1;transform:none;transition:none}.ov,.mc{transition:none}.soc .sw{transition:none}.dot{transition:none}.dot.on{animation:none;box-shadow:0 0 10px 3px rgba(27,176,208,.9)}}
 </style>
 </head>
 <body>
@@ -167,9 +167,9 @@ section.f>p{color:var(--muted);margin-bottom:30px;padding:0 5%}
       </div>
     </div>
     <div class="stats">
-      <div><b>++K</b><small>طالب نشط</small></div>
-      <div><b>++</b><small>معلم متميز</small></div>
-      <div><b>++</b><small>درس تفاعلي</small></div>
+      <div><b>+10K</b><small>طالب نشط</small></div>
+      <div><b>+500</b><small>معلم متميز</small></div>
+      <div><b>+1000</b><small>درس تفاعلي</small></div>
     </div>
   </div>
   <div class="mock" aria-hidden="true">
@@ -269,7 +269,7 @@ section.f>p{color:var(--muted);margin-bottom:30px;padding:0 5%}
     </div>
     <div class="mb">
       <h2 id="mt">أكاديمية مشكاة</h2>
-      <p class="intro">منصة تعليمية عربية تجمع دروس وتمارين شعبتك ومادتك في مكان واحد، بتصميم بسيط وواضح يساعدك على المراجعة بتركيز وبدون تشتت.</p>
+      <p class="intro">منصة تعليمية عربية تجمع دروس شعبتك ومادتك في مكان واحد، بتصميم بسيط وواضح يساعدك على المراجعة بتركيز وبدون تشتت.</p>
 
       <div class="sec">
         <h3>🎓 الشعب التي نغطيها</h3>
@@ -292,7 +292,7 @@ section.f>p{color:var(--muted);margin-bottom:30px;padding:0 5%}
       <div class="sec">
         <h3>⚡ ماذا تقدم لك المنصة؟</h3>
         <ul class="ck">
-          <li>دروس وتمارين  مرتبة حسب شعبتك ومادتك</li>
+          <li>دروس مرتبة حسب شعبتك ومادتك</li>
           <li>لكل درس: ملخصات وتمارين وتصحيح وسلاسل الميزان</li>
           <li>شروحات مبسطة وفيديوهات تعيد مشاهدتها متى شئت</li>
           <li>حساب شخصي يحفظ شعبتك ومادتك</li>
