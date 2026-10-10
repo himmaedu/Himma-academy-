@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="auth.css">
 <style>
+:root{--c1:#0a7ba0;--c2:#0f9bbd;--gold1:#ffc233;--gold2:#ff9f1c;--goldink:#4a3000;--cglow:rgba(6,120,150,.38);--cdeep:#086a8c}
 body{display:block;padding:0}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 5%;background:var(--card);border-bottom:1px solid var(--line)}
 header button{width:auto;margin:0;padding:8px 20px}
@@ -14,6 +15,26 @@ main{max-width:900px;margin:30px auto;padding:0 5%}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:20px}
 .c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
 .c p{color:var(--muted);font-size:14px}
+.clk{cursor:pointer;border:2px solid #ff9f1c;transition:transform .2s,box-shadow .2s}
+.clk:hover,.clk:focus-visible{transform:translateY(-3px);box-shadow:0 12px 28px rgba(255,159,28,.25)}
+.clk h3::after{content:" ▾";color:#ff9f1c}
+.clk[aria-expanded="true"] h3::after{content:" ▴"}
+
+.tp{display:none;margin-top:26px}
+.tp.open{display:block;animation:tpin .45s ease}
+@keyframes tpin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.tph{font-size:20px;margin-bottom:14px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,260px));justify-content:center;gap:16px}
+.tc{direction:rtl;display:block;text-align:center;padding:16px 16px 18px;border-radius:18px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 12px 28px var(--cglow);transition:transform .25s}
+.tc:hover{transform:translateY(-4px)}
+.tc::before{content:"";position:absolute;left:-40px;bottom:-60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12)}
+.tc>*{position:relative}
+.tc-tag{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--gold1),var(--gold2));color:var(--goldink);padding:5px 14px;border-radius:999px;font-weight:800;font-size:13.5px;box-shadow:0 6px 14px rgba(255,159,28,.4)}
+.tc-sym{font-size:44px;font-weight:800;line-height:1.15;margin:8px 0 0;text-shadow:0 2px 4px rgba(0,60,80,.2)}
+.tc-name{font-weight:800;font-size:16px;margin-top:2px}
+.tc p{color:#fff;font-size:13px;line-height:1.6;margin:6px 0 12px;font-weight:500;text-shadow:0 1px 2px rgba(0,60,80,.25)}
+.tc-go{display:inline-block;background:#fff;color:var(--cdeep);padding:8px 20px;border-radius:999px;font-weight:800;font-size:13.5px;box-shadow:0 8px 18px rgba(0,60,80,.2)}
+@media (prefers-reduced-motion:reduce){.tp.open{animation:none}.tc,.clk{transition:none}}
 </style>
 </head>
 <body>
@@ -24,13 +45,29 @@ main{max-width:900px;margin:30px auto;padding:0 5%}
 <main>
   <h1 id="hi"></h1>
   <p class="sub" style="text-align:right" id="role"></p>
+
   <div class="grid">
-    <div class="c"><h3>دوراتي</h3><p>لم تسجّل في أي دورة بعد.</p></div>
+    <div class="c clk" id="cb" role="button" tabindex="0" aria-expanded="false" aria-controls="tp">
+      <h3>دوراتي</h3>
+      <p>اضغط لعرض أساتذتك ودروسهم.</p>
+    </div>
     <div class="c"><h3>تقدّمي</h3><p>0% من الدروس مكتملة.</p></div>
     <div class="c"><h3>الاختبارات</h3><p>لا توجد اختبارات حالياً.</p></div>
   </div>
+
+  <section class="tp" id="tp" aria-label="أساتذتي">
+    <h2 class="tph">اختر أستاذك</h2>
+    <div class="tgrid" id="tgrid"></div>
+  </section>
 </main>
+
 <script>
+/* ✏️ أسماء الأساتذة: اكتب الاسم بين علامتي التنصيص بعد name: */
+const TEACHERS=[
+  {k:'math',icon:'👨‍🏫',title:'أستاذ الرياضيات',name:'',sym:'π',desc:'دروس الرياضيات لكل الشعب'},
+  {k:'phys',icon:'👩‍🏫',title:'أستاذة الفيزياء',name:'',sym:'⚛',desc:'دروس الفيزياء، ومادة الاقتصاد لشعبة تسيير واقتصاد'}
+];
+
 const email=localStorage.getItem('mishkat_session');
 const users=JSON.parse(localStorage.getItem('mishkat_users')||'[]');
 const u=users.find(x=>x.email===email);
@@ -45,6 +82,46 @@ else{
   document.getElementById('role').textContent=t;
 }
 document.getElementById('out').onclick=()=>{localStorage.removeItem('mishkat_session');location.href='index.html';};
+
+/* بطاقات الأساتذة */
+const tg=document.getElementById('tgrid');
+TEACHERS.forEach(t=>{
+  const a=document.createElement('a');
+  a.className='tc';
+  a.href='branches.html?t='+t.k;
+  const tag=document.createElement('span');
+  tag.className='tc-tag';
+  tag.textContent=t.icon+' '+t.title;
+  const sym=document.createElement('div');
+  sym.className='tc-sym';
+  sym.textContent=t.sym;
+  a.appendChild(tag);
+  a.appendChild(sym);
+  if(t.name){
+    const nm=document.createElement('div');
+    nm.className='tc-name';
+    nm.textContent=t.name;
+    a.appendChild(nm);
+  }
+  const p=document.createElement('p');
+  p.textContent=t.desc;
+  const go=document.createElement('span');
+  go.className='tc-go';
+  go.textContent='اختر شعبتك ←';
+  a.appendChild(p);
+  a.appendChild(go);
+  tg.appendChild(a);
+});
+
+/* فتح وإغلاق «دوراتي» */
+const cb=document.getElementById('cb'), tpEl=document.getElementById('tp');
+function toggle(){
+  const o=tpEl.classList.toggle('open');
+  cb.setAttribute('aria-expanded',o?'true':'false');
+  if(o) tpEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+cb.onclick=toggle;
+cb.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}};
 </script>
 </body>
 </html>
