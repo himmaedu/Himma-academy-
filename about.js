@@ -16,6 +16,7 @@ var MK={C1:'#0a7ba0',C2:'#0f9bbd',C3:'#0b8cae',GOLD1:'#ffc233',GOLD2:'#ff9f1c',G
     el.onclick=function(){
       var b=el.dataset.b;
       localStorage.setItem('mishkat_branch',b);
+      localStorage.removeItem('mishkat_chapter');
       if(!tp){location.href='subjects.html';return;}
       var s;
       if(tp==='math'){s='الرياضيات';}
@@ -37,6 +38,7 @@ var MK={C1:'#0a7ba0',C2:'#0f9bbd',C3:'#0b8cae',GOLD1:'#ffc233',GOLD2:'#ff9f1c',G
     el.onclick=function(){
       var s=el.dataset.s;
       localStorage.setItem('mishkat_subject',s);
+      localStorage.removeItem('mishkat_chapter');
       if(s==='الفيزياء'){location.href='physics.html';}
       else if(s==='الرياضيات'&&br!=='تسيير واقتصاد'){location.href='math.html';}
       else{location.href='section.html';}
@@ -168,6 +170,11 @@ var MK={C1:'#0a7ba0',C2:'#0f9bbd',C3:'#0b8cae',GOLD1:'#ffc233',GOLD2:'#ff9f1c',G
 
   var toast=document.getElementById('toast'), tm;
   document.getElementById('vc-go').onclick=function(){
+    /* الرياضيات: تفتح صفحة فيديوهات الأستاذ نور الدين */
+    if(localStorage.getItem('mishkat_subject')==='الرياضيات'){
+      location.href='videos.html';
+      return;
+    }
     if(!toast)return;
     toast.textContent='قسم «الفيديوهات» قيد الإعداد، وسيُضاف محتواه قريباً ✨';
     toast.classList.add('on');
@@ -217,7 +224,7 @@ var MK={C1:'#0a7ba0',C2:'#0f9bbd',C3:'#0b8cae',GOLD1:'#ffc233',GOLD2:'#ff9f1c',G
   +'<h2>أكاديمية مشكاة</h2>'
   +'<ul>'
   +'<li><i>🎓</i><span>أكاديمية مشكاة منصة تعليمية عربية تساعدك على التفوق بخطوات واضحة ومنظمة.</span></li>'
-  +'<li><i>📚</i><span>دروس وتمارين مرتبة حسب شعبتك ومادتك، من الدرس الأول حتى يوم الامتحان.</span></li>'
+  +'<li><i>📚</i><span>دروس وتمارين  مرتبة حسب شعبتك ومادتك، من الدرس الأول حتى يوم الامتحان.</span></li>'
   +'<li><i>🎥</i><span>شروحات مبسطة وفيديوهات تعيد مشاهدتها في أي وقت ومن أي جهاز.</span></li>'
   +'<li><i>💡</i><span>اسم «مشكاة» مأخوذ من المصباح الذي ينير الطريق، وهذا ما نريده لك في رحلتك الدراسية.</span></li>'
   +'</ul>';
