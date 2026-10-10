@@ -1,12 +1,29 @@
-/* ===== 0) توجيه الصفحات حسب الشعبة ===== */
+/* ألوان المنصة: غيّرها من هنا فقط */
+var MK={C1:'#0a7ba0',C2:'#0f9bbd',C3:'#0b8cae',GOLD1:'#ffc233',GOLD2:'#ff9f1c',GOLDINK:'#4a3000',GLOW:'rgba(6,120,150,.38)',DEEP:'#086a8c'};
+
+/* ===== 0) توجيه الصفحات حسب الشعبة (ووضع الأستاذ) ===== */
 (function(){
   var br=localStorage.getItem('mishkat_branch')||'';
+  var tp=new URLSearchParams(location.search).get('t');
+  if(tp!=='math'&&tp!=='phys') tp=null;
 
-  /* صفحة الشعب: كل الشعب تفتح صفحة المواد */
+  /* صفحة الشعب: إذا جاء الطالب من بطاقة أستاذ */
+  var subEl=document.querySelector('.wrap > .sub');
+  if(tp&&document.querySelector('.b[data-b]')&&subEl){
+    subEl.textContent='اختر شعبتك لمتابعة دروس '+(tp==='math'?'الرياضيات':'الفيزياء');
+  }
   document.querySelectorAll('.b[data-b]').forEach(function(el){
     el.onclick=function(){
-      localStorage.setItem('mishkat_branch',el.dataset.b);
-      location.href='subjects.html';
+      var b=el.dataset.b;
+      localStorage.setItem('mishkat_branch',b);
+      if(!tp){location.href='subjects.html';return;}
+      var s;
+      if(tp==='math'){s='الرياضيات';}
+      else{s=(b==='تسيير واقتصاد')?'الاقتصاد':'الفيزياء';}
+      localStorage.setItem('mishkat_subject',s);
+      if(s==='الرياضيات'&&b!=='تسيير واقتصاد'){location.href='math.html';}
+      else if(s==='الفيزياء'){location.href='physics.html';}
+      else{location.href='section.html';}
     };
   });
 
@@ -115,13 +132,56 @@
   });
 })();
 
-/* ===== 4) بطاقة عن المنصة (سماوي + ذهبي) ===== */
+/* ===== 4) بطاقة الفيديوهات الصغيرة (صفحات الدرس والأقسام) ===== */
+(function(){
+  var grid=document.querySelector('.wrap > .grid');
+  if(!grid||!grid.querySelector('.b[data-t]')||document.getElementById('vid-card'))return;
+
+  var css=''
+  +'.vc{direction:rtl;text-align:center;max-width:300px;margin:20px auto 0;padding:16px 16px 18px;border-radius:18px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,'+MK.C1+','+MK.C2+');box-shadow:0 12px 28px '+MK.GLOW+';transition:transform .25s}'
+  +'.vc:hover{transform:translateY(-3px)}'
+  +'.vc::before{content:"";position:absolute;left:-40px;bottom:-60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12)}'
+  +'.vc>*{position:relative}'
+  +'.vc-tag{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,'+MK.GOLD1+','+MK.GOLD2+');color:'+MK.GOLDINK+';padding:5px 14px;border-radius:999px;font-weight:800;font-size:13.5px;box-shadow:0 6px 14px rgba(255,159,28,.4)}'
+  +'.vc-num{font-size:36px;font-weight:800;line-height:1.1;margin:8px 0 0;text-shadow:0 2px 4px rgba(0,60,80,.2)}'
+  +'.vc-num small{font-size:14px;font-weight:700;opacity:.9;margin-right:6px}'
+  +'.vc-stars{color:'+MK.GOLD1+';font-size:17px;letter-spacing:3px;direction:ltr;margin:2px 0 4px;text-shadow:0 2px 6px rgba(0,60,80,.25)}'
+  +'.vc p{color:#fff;font-size:13px;line-height:1.6;margin:0 0 12px;font-weight:500;text-shadow:0 1px 2px rgba(0,60,80,.25)}'
+  +'.vc-go{display:inline-block;width:auto;margin:0;padding:8px 20px;border:0;border-radius:999px;background:#fff;color:'+MK.DEEP+';font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(0,60,80,.2)}'
+  +'.vc-go:hover{background:#e8fbff}'
+  +'@media (min-width:900px){.vc{max-width:320px}}'
+  +'@media (prefers-reduced-motion:reduce){.vc{transition:none}}';
+  var st=document.createElement('style');
+  st.textContent=css;
+  document.head.appendChild(st);
+
+  var d=document.createElement('div');
+  d.id='vid-card';
+  d.className='vc';
+  d.innerHTML=''
+  +'<span class="vc-tag">🎥 الفيديوهات</span>'
+  +'<div class="vc-num">24/7<small>متاحة</small></div>'
+  +'<div class="vc-stars" aria-hidden="true">★★★★★</div>'
+  +'<p>شاهد الدروس في أي وقت وأعد المشاهدة متى شئت.</p>'
+  +'<button type="button" class="vc-go" id="vc-go">شاهد الآن ←</button>';
+  grid.after(d);
+
+  var toast=document.getElementById('toast'), tm;
+  document.getElementById('vc-go').onclick=function(){
+    if(!toast)return;
+    toast.textContent='قسم «الفيديوهات» قيد الإعداد، وسيُضاف محتواه قريباً ✨';
+    toast.classList.add('on');
+    clearTimeout(tm);
+    tm=setTimeout(function(){toast.classList.remove('on');},2800);
+  };
+})();
+
+/* ===== 5) بطاقة عن المنصة (سماوي + ذهبي) ===== */
 (function(){
   var mock=document.querySelector('.wrap > .mock');
   if(!mock||document.getElementById('about-card'))return;
 
-  /* ألوان البطاقة: غيّرها من هنا فقط */
-  var C1='#0a7ba0',C2='#0f9bbd',C3='#0b8cae',GOLD1='#ffc233',GOLD2='#ff9f1c',GOLDINK='#4a3000',GLOW='rgba(6,120,150,.38)';
+  var C1=MK.C1,C2=MK.C2,C3=MK.C3,GOLD1=MK.GOLD1,GOLD2=MK.GOLD2,GOLDINK=MK.GOLDINK,GLOW=MK.GLOW;
 
   var css=''
   +'.ab{direction:rtl;text-align:right;max-width:420px;margin:22px auto 0;padding:26px 22px;border-radius:22px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(120deg,'+C1+','+C2+','+C3+','+C1+');background-size:300% 300%;animation:abbg 10s ease infinite;box-shadow:0 18px 40px '+GLOW+'}'
@@ -156,8 +216,8 @@
   +'<span class="ab-tag">✨ عن المنصة</span>'
   +'<h2>أكاديمية مشكاة</h2>'
   +'<ul>'
-  +'<li><i>🎓</i><span>أكاديمية مشكاة منصة تعليمية عربية تساعدك على التفوق في البكالوريا  بخطوات واضحة ومنظمة.</span></li>'
-  +'<li><i>📚</i><span>دروس وتمارين مرتبة حسب شعبتك ومادتك، من الدرس الأول حتى يوم الامتحان.</span></li>'
+  +'<li><i>🎓</i><span>أكاديمية مشكاة منصة تعليمية عربية تساعدك على التفوق بخطوات واضحة ومنظمة.</span></li>'
+  +'<li><i>📚</i><span>دروس مرتبة حسب شعبتك ومادتك، من الدرس الأول حتى يوم الامتحان.</span></li>'
   +'<li><i>🎥</i><span>شروحات مبسطة وفيديوهات تعيد مشاهدتها في أي وقت ومن أي جهاز.</span></li>'
   +'<li><i>💡</i><span>اسم «مشكاة» مأخوذ من المصباح الذي ينير الطريق، وهذا ما نريده لك في رحلتك الدراسية.</span></li>'
   +'</ul>';
